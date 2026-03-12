@@ -142,6 +142,45 @@ function pintarDispositivos(lista) {
 }
 
 // FUNCIÓN: Pintar comentarios en detalle.html
+// Lógica de Autenticación para Comentarios
+document.addEventListener('DOMContentLoaded', () => {
+    // Si estamos en la página de detalle
+    const idUrl = new URLSearchParams(window.location.search).get('id');
+    if (idUrl) {
+        idDispositivo = idUrl;
+
+        // Manejo del Navbar en detalle.html
+        const zonaUsuarioDetalle = document.getElementById('zona-usuario-detalle');
+        const token = localStorage.getItem('cliente_token');
+        const nombre = localStorage.getItem('cliente_nombre');
+
+        if (token && nombre && zonaUsuarioDetalle) {
+            zonaUsuarioDetalle.innerHTML = `
+                <span class="text-white-50 small me-2">Hola, <strong class="text-white">${nombre}</strong></span>
+                <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="cerrarSesionCliente()">Salir</button>
+            `;
+
+            // Reemplazar la caja en rojo por la de texto
+            const cajaFormulario = document.getElementById('caja-hacer-comentario');
+            if (cajaFormulario) {
+                cajaFormulario.innerHTML = `
+                <div class="card card-dark mb-4 shadow-sm border-secondary">
+                    <div class="card-body">
+                        <textarea id="texto-comentario" class="form-control form-control-dark mb-3" rows="3"
+                            placeholder="¿Qué opinas de este dispositivo? Escribe como ${nombre}..."></textarea>
+                        <button id="btn-comentar" class="btn btn-accent btn-sm" onclick="enviarComentario()">
+                            <i class="bi bi-send me-1"></i> Publicar Opinión
+                        </button>
+                    </div>
+                </div>
+                `;
+            }
+        }
+
+        cargarDetalle();
+        cargarComentarios();
+    }
+});
 function cargarComentarios() {
     fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`)
         .then(res => res.json())
@@ -178,9 +217,16 @@ function enviarComentario() {
     const texto = document.getElementById('texto-comentario').value;
     if (texto.trim() === '') return alert('Escribe algo primero.');
 
+    // Tomamos el ID Real del Navegador que se generó en su Login
+    const idReal = localStorage.getItem('cliente_id');
+
+    if (!idReal) {
+        return alert("Error fatal: No se detectó tu sesión de usuario.");
+    }
+
     const datos = {
         texto: texto,
-        id_usuario: 2 // Cliente fijo por simplicidad académica
+        id_usuario: parseInt(idReal)
     };
 
     fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`, {

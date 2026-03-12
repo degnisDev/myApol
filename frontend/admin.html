@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApol - Panel Administrativo</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Nuestro estilo premium oscuro -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Menú Administrativo -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4" style="background-color: rgba(25, 28, 33, 0.9);">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold text-white" href="#">
+                <i class="bi bi-apple text-gradient"></i> MyApol Admin
+            </a>
+            <div class="d-flex">
+                <span class="navbar-text me-3 text-white-50">
+                    <i class="bi bi-person-circle"></i> Sesión activa: <strong
+                        class="text-white">admin@myapol.com</strong>
+                </span>
+                <button class="btn btn-outline-danger btn-sm" id="btn-cerrar-sesion">
+                    <i class="bi bi-box-arrow-right"></i> Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+        <!-- Encabezado del Dashboard -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="text-white fw-bold mb-0">Gestión de Inventario</h2>
+                <p class="text-white-50 mb-0">Administra los productos que verán tus clientes en el catálogo público.
+                </p>
+            </div>
+            <!-- Botón para Inyectar Dispositivos Nuevos -->
+            <button class="btn btn-accent shadow" data-bs-toggle="modal" data-bs-target="#modalDispositivo"
+                id="btn-nuevo">
+                <i class="bi bi-plus-lg me-1"></i> Agregar Dispositivo Nuevo
+            </button>
+        </div>
+
+        <!-- TABLA DE PRODUCTOS -->
+        <div class="card bg-dark border-secondary shadow-lg mb-5">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle">
+                        <thead class="table-active">
+                            <tr>
+                                <th>Ref</th>
+                                <th>Dispositivo</th>
+                                <th>Marca/Cat.</th>
+                                <th>Precio COP</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-admin-body">
+                            <!-- JS inyectará las filas aquí -->
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2"></div> Cargando inventario...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VENTANA EMERGENTE (MODAL) PARA CREAR / EDITAR -->
+        <div class="modal fade" id="modalDispositivo" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title fw-bold" id="modalTitulo"><i class="bi bi-cpu text-gradient"></i> Nuevo
+                            Dispositivo</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-dispositivo">
+                            <!-- Campo Oculto para el ID al editar -->
+                            <input type="hidden" id="admin-id">
+
+                            <div class="mb-3">
+                                <label class="form-label text-white-50 small">Nombre del Producto</label>
+                                <input type="text" class="form-control form-control-dark" id="admin-nombre" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white-50 small">Precio (COP)</label>
+                                    <input type="number" class="form-control form-control-dark" id="admin-precio"
+                                        required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white-50 small">Categoría</label>
+                                    <select class="form-select form-control-dark" id="admin-categoria" required>
+                                        <option value="1">Smartphones</option>
+                                        <option value="2">Computers</option>
+                                        <option value="3">Tablets</option>
+                                        <option value="4">Wearables</option>
+                                        <option value="5">Home & Ent.</option>
+                                        <option value="6">Accessories</option>
+                                        <option value="7">Merch</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-white-50 small">URL Imagen (Opcional)</label>
+                                <input type="url" class="form-control form-control-dark" id="admin-imagen"
+                                    placeholder="https://...">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-white-50 small">Descripción Detallada</label>
+                                <textarea class="form-control form-control-dark" id="admin-descripcion" rows="3"
+                                    required></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-accent px-4 fw-bold"
+                            id="btn-guardar-admin">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Scripts Esenciales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- LÓGICA DEL PANEL ADMINISTRATIVO -->
+    <script>
+        // 1. CONTROL DE SEGURIDAD (Bouncer)
+        const token = localStorage.getItem('admin_token');
+        if (!token) {
+            // Si no hay token guardado, ni te molestes en cargar la página, devuélvelo al login.
+            alert("Acceso denegado. Por favor inicia sesión.");
+            window.location.replace('login.html');
+        }
+
+        // Variables Globales del Admin
+        const apiBaseUrl = 'http://localhost:5000/api';
+        let listaDispositivosAdmin = [];
+        const modalElement = document.getElementById('modalDispositivo');
+        const modalInstancia = new bootstrap.Modal(modalElement);
+
+        // Formateador
+        const formateaPesos = (n) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
+
+        // 2. INICIALIZAR EL DASHBOARD AL CARGAR LA PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            obtenerDispositivosAdmin();
+
+            // Botón Cerrar Sesión
+            document.getElementById('btn-cerrar-sesion').addEventListener('click', () => {
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_id');
+                window.location.replace('login.html');
+            });
+
+            // Botón "Agregar Dispositivo Nuevo" (Limpia la ventana modal)
+            document.getElementById('btn-nuevo').addEventListener('click', () => {
+                document.getElementById('form-dispositivo').reset();
+                document.getElementById('admin-id').value = '';
+                document.getElementById('modalTitulo').innerHTML = '<i class="bi bi-cpu text-gradient"></i> Nuevo Dispositivo';
+            });
+
+            // Botón "Guardar" del Modal
+            document.getElementById('btn-guardar-admin').addEventListener('click', guardarDispositivo);
+        });
+
+        // 3. RECUPERAR DATOS Y PINTAR LA TABLA (Read)
+        function obtenerDispositivosAdmin() {
+            fetch(`${apiBaseUrl}/dispositivos`)
+                .then(res => res.json())
+                .then(datos => {
+                    listaDispositivosAdmin = datos.dispositivos;
+                    renderizarTabla(listaDispositivosAdmin);
+                })
+                .catch(err => {
+                    document.getElementById('tabla-admin-body').innerHTML = `<tr><td colspan="5" class="text-danger text-center"><i class="bi bi-wifi-off"></i> Error conectando al Servidor.</td></tr>`;
+                });
+        }
+
+        function renderizarTabla(lista) {
+            const tbody = document.getElementById('tabla-admin-body');
+            tbody.innerHTML = '';
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">Inventario Vacío</td></tr>';
+                return;
+            }
+
+            lista.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-white-50">#${item.id}</td>
+                    <td class="fw-bold text-white"><i class="bi bi-box-seam me-2 text-secondary"></i> ${item.nombre}</td>
+                    <td><span class="badge bg-dark border border-secondary">${item.marca} - ${item.categoria}</span></td>
+                    <td class="text-white">${formateaPesos(item.precio)}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-light me-1" onclick="abrirEdicion(${item.id})"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="borrarDispositivo(${item.id})"><i class="bi bi-trash3"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 4. CREAR O ACTUALIZAR (Create / Update)
+        function guardarDispositivo() {
+            // Recoger datos del formulario
+            const id = document.getElementById('admin-id').value;
+            const payload = {
+                nombre: document.getElementById('admin-nombre').value,
+                precio: parseFloat(document.getElementById('admin-precio').value),
+                id_categoria: parseInt(document.getElementById('admin-categoria').value),
+                id_marca: 1, // Por ahora todas son Apple (1) según nuestra DB
+                url_imagen: document.getElementById('admin-imagen').value,
+                descripcion: document.getElementById('admin-descripcion').value
+            };
+
+            // Validar que llenó lo importante
+            if (!payload.nombre || isNaN(payload.precio) || !payload.descripcion) {
+                alert("Por favor diligencia el nombre, precio y descripción.");
+                return;
+            }
+
+            // ¿Es Nuevo (POST) o es Edición (PUT)?
+            const metodo = id ? 'PUT' : 'POST';
+            const url = id ? `${apiBaseUrl}/dispositivos/${id}` : `${apiBaseUrl}/dispositivos`;
+
+            fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp.success) {
+                        modalInstancia.hide(); // Cerrar el pop-up
+                        obtenerDispositivosAdmin(); // Recargar la tabla
+                    } else {
+                        alert("Error servidor: " + resp.mensaje);
+                    }
+                })
+                .catch(err => alert("Error de red al guardar."));
+        }
+
+        // 5. CARGAR DATOS PARA EDITAR
+        function abrirEdicion(idBuscado) {
+            // Buscamos el dispositivo en el array en memoria
+            const disp = listaDispositivosAdmin.find(d => d.id === idBuscado);
+            if (disp) {
+                // Llenamos el modal con los valores viejos
+                document.getElementById('admin-id').value = disp.id;
+                document.getElementById('admin-nombre').value = disp.nombre;
+                document.getElementById('admin-precio').value = disp.precio;
+                document.getElementById('admin-imagen').value = disp.url_imagen || '';
+                document.getElementById('admin-descripcion').value = disp.descripcion;
+
+                // Preseleccionar categoría (Truco: iterar por el texto o hacer match. Aquí haremos un switch rápido para ilustrar o buscar el índice).
+                const selectCat = document.getElementById('admin-categoria');
+                for (let i = 0; i < selectCat.options.length; i++) {
+                    // Match por el texto de la categoría que viene de la BD ("Smartphones", "Computers", etc)
+                    if (selectCat.options[i].text.includes(disp.categoria)) {
+                        selectCat.selectedIndex = i;
+                        break;
+                    }
+                }
+
+                document.getElementById('modalTitulo').innerHTML = '<i class="bi bi-pencil-square text-gradient"></i> Editar Dispositivo #' + disp.id;
+                modalInstancia.show(); // Abrir el modal por código
+            }
+        }
+
+        // 6. ELIMINAR (Delete)
+        function borrarDispositivo(id) {
+            if (confirm("⚠ ESTÁS A PUNTO DE ELIMINAR ESTE REGISTRO. ¿Estás absolutamente seguro?")) {
+                fetch(`${apiBaseUrl}/dispositivos/${id}`, { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(resp => {
+                        if (resp.success) {
+                            obtenerDispositivosAdmin(); // Recargar tabla
+                        }
+                    })
+                    .catch(err => alert("No se pudo eliminar de la base de datos."));
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

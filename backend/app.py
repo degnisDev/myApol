@@ -89,8 +89,11 @@ def manejar_comentarios(id_dispositivo):
         
     elif request.method == 'POST':
         datos = request.json
-        # Asumimos id_usuario = 2 (el cliente por defecto) para este proyecto académico
-        id_usuario = datos.get('id_usuario', 2) 
+        # Extraemos el ID del usuario real enviado desde el Frontend
+        id_usuario = datos.get('id_usuario')
+        
+        if not id_usuario:
+            return jsonify({"success": False, "mensaje": "Debe iniciar sesión para comentar"}), 401 
         
         cursor = conn.cursor()
         cursor.execute('''
@@ -121,6 +124,69 @@ def login():
         return jsonify({"success": True, "mensaje": "Login exitoso", "token": "admin_token_123", "id_usuario": usuario['id']})
     else:
         return jsonify({"success": False, "mensaje": "Credenciales inválidas"}), 401
+
+# -------------------------------------------------------------
+# RUTA PÚBLICA: Registro de Clientes Nuevos
+# -------------------------------------------------------------
+@app.route('/api/registro_cliente', methods=['POST'])
+def registro_cliente():
+    datos = request.json
+    nombre = datos.get('nombre')
+    correo = datos.get('correo')
+    password = datos.get('password')
+    
+    # Validamos
+    if not nombre or not correo or not password:
+        return jsonify({"success": False, "mensaje": "Faltan datos requeridos."}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Revisar si el correo ya existe
+    existente = cursor.execute('SELECT id FROM usuarios WHERE correo = ?', (correo,)).fetchone()
+    if existente:
+        conn.close()
+        return jsonify({"success": False, "mensaje": "Este correo ya está registrado."}), 409
+        
+    try:
+        # Insertar nuevo usuario como Cliente (id_rol = 2)
+        cursor.execute('''
+            INSERT INTO usuarios (nombre, correo, password, id_rol)
+            VALUES (?, ?, ?, 2)
+        ''', (nombre, correo, password))
+        conn.commit()
+        nuevo_id = cursor.lastrowid
+        conn.close()
+        return jsonify({"success": True, "mensaje": "Usuario registrado con éxito.", "id_usuario": nuevo_id}), 201
+    except Exception as e:
+        conn.close()
+        return jsonify({"success": False, "mensaje": str(e)}), 500
+
+# -------------------------------------------------------------
+# RUTA PÚBLICA: Login de Clientes
+# -------------------------------------------------------------
+@app.route('/api/login_cliente', methods=['POST'])
+def login_cliente():
+    datos = request.json
+    correo = datos.get('correo')
+    password = datos.get('password')
+    
+    conn = get_db_connection()
+    # Nos aseguramos de que el que se loguea tenga rol 2 (Cliente) o verificamos solo credenciales
+    usuario = conn.execute('SELECT * FROM usuarios WHERE correo = ? AND password = ? AND id_rol = 2', (correo, password)).fetchone()
+    conn.close()
+    
+    if usuario:
+        # Retornamos datos del cliente para su sesión
+        return jsonify({
+            "success": True, 
+            "mensaje": "Bienvenido", 
+            "token": "user_token_" + str(usuario['id']), 
+            "id_usuario": usuario['id'],
+            "nombre": usuario['nombre']
+        })
+    else:
+        return jsonify({"success": False, "mensaje": "Correo o contraseña incorrectos."}), 401
 
 # -------------------------------------------------------------
 # RUTA PRIVADA: Crear un nuevo dispositivo

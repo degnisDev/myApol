@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApol - Ingreso de Clientes</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- CSS Propio -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1f24 100%);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .login-card {
+            background: rgba(40, 44, 52, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+            width: 100%;
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(13, 110, 253, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glow-effect"></div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5 col-xl-4 z-1">
+
+                <div class="card login-card p-4 p-md-5" id="caja-formulario">
+
+                    <!-- VISTA: LOGIN -->
+                    <div id="vista-login">
+                        <div class="text-center mb-5">
+                            <h1 class="text-white fw-bold"><i class="bi bi-apple text-gradient"></i> MyApol</h1>
+                            <p class="text-white-50">Inicia sesión en tu cuenta</p>
+                        </div>
+
+                        <form id="form-login-cliente">
+                            <div class="mb-4">
+                                <label class="form-label text-white-50 small ms-1 mb-1">Correo Electrónico</label>
+                                <input type="email" id="login-correo" class="form-control form-control-dark"
+                                    placeholder="tucorreo@ejemplo.com" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label text-white-50 small ms-1 mb-1">Contraseña</label>
+                                <input type="password" id="login-password" class="form-control form-control-dark"
+                                    placeholder="••••••••" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-accent w-100 mb-3 py-3 fw-bold" id="btn-login">
+                                Iniciar Sesión <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+
+                            <div class="text-center text-danger small mb-3" id="error-login" style="height: 20px;">
+                            </div>
+
+                            <div class="text-center">
+                                <span class="text-secondary small">¿No tienes cuenta?</span>
+                                <a href="#" id="link-registro"
+                                    class="text-primary text-decoration-none small ms-1">¡Regístrate gratis!</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- VISTA: REGISTRO (Oculta por defecto) -->
+                    <div id="vista-registro" class="d-none">
+                        <div class="text-center mb-5">
+                            <h1 class="text-white fw-bold"><i class="bi bi-apple text-gradient"></i> Registro</h1>
+                            <p class="text-white-50">Únete a la mejor comunidad</p>
+                        </div>
+
+                        <form id="form-registro-cliente">
+                            <div class="mb-3">
+                                <label class="form-label text-white-50 small ms-1 mb-1">Tu Nombre Completo</label>
+                                <input type="text" id="reg-nombre" class="form-control form-control-dark" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-white-50 small ms-1 mb-1">Correo Electrónico</label>
+                                <input type="email" id="reg-correo" class="form-control form-control-dark" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label text-white-50 small ms-1 mb-1">Contraseña</label>
+                                <input type="password" id="reg-password" class="form-control form-control-dark"
+                                    placeholder="Mínimo 5 caracteres" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mb-3 py-3 fw-bold" id="btn-registro">
+                                Crear Cuenta <i class="bi bi-person-plus ms-2"></i>
+                            </button>
+
+                            <div class="text-center text-danger small mb-3" id="error-registro" style="height: 20px;">
+                            </div>
+
+                            <div class="text-center">
+                                <span class="text-secondary small">¿Ya tienes cuenta?</span>
+                                <a href="#" id="link-login" class="text-primary text-decoration-none small ms-1">Ingresa
+                                    aquí</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Volver Público -->
+                    <div class="text-center border-top border-secondary pt-3 mt-4">
+                        <a href="index.html" class="text-secondary text-decoration-none small hover-white"><i
+                                class="bi bi-shop me-1"></i> Volver a la Tienda</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const vistaLogin = document.getElementById('vista-login');
+        const vistaRegistro = document.getElementById('vista-registro');
+
+        // Alternar Vistas
+        document.getElementById('link-registro').addEventListener('click', (e) => {
+            e.preventDefault();
+            vistaLogin.classList.add('d-none');
+            vistaRegistro.classList.remove('d-none');
+        });
+
+        document.getElementById('link-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            vistaRegistro.classList.add('d-none');
+            vistaLogin.classList.remove('d-none');
+        });
+
+        // ==========================================
+        // LÓGICA DE INICIO DE SESIÓN
+        // ==========================================
+        document.getElementById('form-login-cliente').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            const errorDiv = document.getElementById('error-login');
+
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+            btn.disabled = true;
+            errorDiv.innerHTML = '';
+
+            fetch('http://localhost:5000/api/login_cliente', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    correo: document.getElementById('login-correo').value,
+                    password: document.getElementById('login-password').value
+                })
+            })
+                .then(res => res.json())
+                .then(datos => {
+                    btn.innerHTML = 'Iniciar Sesión <i class="bi bi-arrow-right ms-2"></i>';
+                    btn.disabled = false;
+
+                    if (datos.success) {
+                        errorDiv.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Redirigiendo...</span>';
+                        // Guardamos sesión en el navegador
+                        localStorage.setItem('cliente_token', datos.token);
+                        localStorage.setItem('cliente_id', datos.id_usuario);
+                        localStorage.setItem('cliente_nombre', datos.nombre);
+
+                        setTimeout(() => window.location.href = 'index.html', 1000);
+                    } else {
+                        errorDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> ' + datos.mensaje;
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    errorDiv.innerHTML = '<i class="bi bi-wifi-off"></i> Fallo de red.';
+                });
+        });
+
+        // ==========================================
+        // LÓGICA DE REGISTRO
+        // ==========================================
+        document.getElementById('form-registro-cliente').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-registro');
+            const errorDiv = document.getElementById('error-registro');
+
+            btn.disabled = true;
+            errorDiv.innerHTML = '';
+
+            fetch('http://localhost:5000/api/registro_cliente', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    nombre: document.getElementById('reg-nombre').value,
+                    correo: document.getElementById('reg-correo').value,
+                    password: document.getElementById('reg-password').value
+                })
+            })
+                .then(res => res.json())
+                .then(datos => {
+                    btn.disabled = false;
+
+                    if (datos.success) {
+                        errorDiv.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ¡Cuenta creada! Ya puedes iniciar sesión.</span>';
+                        document.getElementById('form-registro-cliente').reset();
+                        // Volver a mostrar Login tras 2 segundos
+                        setTimeout(() => {
+                            vistaRegistro.classList.add('d-none');
+                            vistaLogin.classList.remove('d-none');
+                        }, 2500);
+                    } else {
+                        errorDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> ' + datos.mensaje;
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    errorDiv.innerHTML = '<i class="bi bi-wifi-off"></i> Fallo de red.';
+                });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -20,9 +20,18 @@
             <a class="navbar-brand fw-bold" href="index.html">
                 <i class="bi bi-apple"></i> MyApol
             </a>
-            <a href="index.html" class="btn btn-outline-light btn-sm">
-                <i class="bi bi-arrow-left"></i> Volver al Catálogo
-            </a>
+            <div class="d-flex align-items-center">
+                <!-- Zona Pública -->
+                <div id="zona-usuario-detalle" class="me-3">
+                    <a href="login_cliente.html" class="btn btn-primary btn-sm rounded-pill px-3 shadow">
+                        <i class="bi bi-person"></i> Iniciar Sesión / Registrarse
+                    </a>
+                </div>
+                <!-- Atrás -->
+                <a href="index.html" class="btn btn-outline-light border-0 btn-sm text-white-50 hover-white">
+                    <i class="bi bi-arrow-left"></i> Volver al Catálogo
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -41,14 +50,18 @@
                 <h4 class="fw-bold mb-4 text-white"><i class="bi bi-chat-text text-primary"></i> Opiniones de Usuarios
                 </h4>
 
-                <!-- Formulario para agregar comentario -->
-                <div class="card card-dark mb-4 shadow-sm">
-                    <div class="card-body">
-                        <textarea id="texto-comentario" class="form-control form-control-dark mb-3" rows="3"
-                            placeholder="¿Qué opinas de este dispositivo?"></textarea>
-                        <button id="btn-comentar" class="btn btn-accent btn-sm" onclick="enviarComentario()">
-                            <i class="bi bi-send me-1"></i> Enviar Opinión
-                        </button>
+                <!-- Contenedor del Formulario (Controlado por Sesión) -->
+                <div id="caja-hacer-comentario">
+                    <div
+                        class="card card-dark bg-transparent border-secondary border-opacity-50 mb-4 rounded-4 shadow-sm text-center py-4">
+                        <div class="card-body">
+                            <i class="bi bi-lock-fill display-6 text-secondary mb-3"></i>
+                            <h5 class="text-white">Inicia sesión para compartir tu opinión</h5>
+                            <p class="text-white-50 small mb-4">Solo los usuarios registrados de la comunidad Apple
+                                pueden calificar este producto.</p>
+                            <a href="login_cliente.html" class="btn btn-primary rounded-pill px-4 shadow">Ingresar
+                                ahora</a>
+                        </div>
                     </div>
                 </div>
 
