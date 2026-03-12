@@ -1,0 +1,40 @@
+MyApol
+
+! Importadora Autorizada de productos Apple en Colombia !
+
+producto y categorias:
+
+1. Smartphones
+iPhone 15
+iPhone 15 Pro
+iPhone 15 Pro Max
+
+2. Computers
+MacBook Air
+MacBook Pro
+iMac
+
+3. Tablets
+iPad
+iPad Air
+iPad Pro
+
+4. Wearables
+Apple Watch Series 9
+AirPods Pro
+Apple Vision Pro
+
+5. Home & Entertainment
+Apple TV 4K
+HomePod
+HomePod mini
+
+6. Accessories
+AirTag
+Apple Pencil
+Magic Keyboard
+
+7. Merch
+Camisetas Apple
+Pines Apple
+Busos / Hoodies Apple

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApol - Detalle de Dispositivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #000 !important;
+        }
+
+        .btn-black {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .btn-black:hover {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Menú -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-apple"></i> MyApol
+            </a>
+            <a href="index.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left"></i> Volver al Catálogo
+            </a>
+        </div>
+    </nav>
+
+    <div class="container pb-5">
+        <!-- ZONA 1: INFO DEL DISPOSITIVO -->
+        <div class="row align-items-center mb-5" id="zona-detalle">
+            <div class="col-12 text-center my-5">
+                <div class="spinner-border text-dark" role="status"></div>
+                <p>Cargando información del dispositivo...</p>
+            </div>
+        </div>
+
+        <!-- ZONA 2: COMENTARIOS -->
+        <div class="row">
+            <div class="col-md-8 offset-md-2 border-top pt-4">
+                <h4 class="fw-bold mb-4"><i class="bi bi-chat-text"></i> Opiniones de Usuarios</h4>
+
+                <!-- Formulario para agregar comentario -->
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-body bg-light">
+                        <textarea id="texto-comentario" class="form-control mb-2" rows="2"
+                            placeholder="¿Qué opinas de este dispositivo?"></textarea>
+                        <button id="btn-comentar" class="btn btn-black btn-sm" onclick="enviarComentario()">Enviar
+                            Opinión</button>
+                    </div>
+                </div>
+
+                <!-- Lista de Comentarios (Cargada desde la BD) -->
+                <div id="lista-comentarios">
+                    <p class="text-muted small">Cargando comentarios...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Truco para leer el ID que viene en la URL (ej: detalle.html?id=3)
+        const parametros = new URLSearchParams(window.location.search);
+        const idDispositivo = parametros.get('id');
+
+        // Formateador de moneda
+        const formatearCOP = (numero) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(numero);
+
+        // Cuando carga la página, traemos los detalles y luego los comentarios
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!idDispositivo) {
+                document.getElementById('zona-detalle').innerHTML = '<div class="alert alert-danger">No se especificó un dispositivo.</div>';
+                return;
+            }
+
+            // Petición 1: Obtener la info principal del equipo
+            fetch(`http://localhost:5000/api/dispositivos/${idDispositivo}`)
+                .then(res => res.json())
+                .then(datos => {
+                    const zonaDetalle = document.getElementById('zona-detalle');
+                    if (datos.success === false) {
+                        zonaDetalle.innerHTML = '<div class="alert alert-warning">Dispositivo no encontrado.</div>';
+                        return;
+                    }
+
+                    // Dinámicamente pintamos el HTML del detalle
+                    zonaDetalle.innerHTML = `
+                        <div class="col-md-5 text-center">
+                            <!-- Si hay foto en DB la usamos, si no, ponemos un icono genérico gigante -->
+                            ${datos.url_imagen
+                            ? `<img src="${datos.url_imagen}" class="img-fluid rounded shadow-sm" alt="${datos.nombre}">`
+                            : `<div class="bg-white p-5 rounded shadow-sm"><i class="bi bi-display" style="font-size: 8rem; color: #ccc;"></i></div>`
+                        }
+                        </div>
+                        <div class="col-md-7 mt-4 mt-md-0 pl-md-5">
+                            <span class="badge bg-dark mb-2">${datos.marca}</span>
+                            <span class="badge bg-secondary mb-2">${datos.categoria}</span>
+                            <h1 class="fw-bold display-5 mb-3">${datos.nombre}</h1>
+                            <p class="fs-5 text-secondary mb-4">${datos.descripcion}</p>
+                            <h2 class="fw-bold text-dark mb-4">${formatearCOP(datos.precio)}</h2>
+                            <button class="btn btn-black btn-lg px-5 disabled"><i class="bi bi-cart"></i> Comprar (Pronto)</button>
+                        </div>
+                    `;
+
+                    // Petición 2: Después de cargar el equipo, cargamos sus comentarios
+                    cargarComentarios();
+                })
+                .catch(e => console.error(e));
+        });
+
+        // Función para consultar comentarios y pintarlos
+        function cargarComentarios() {
+            fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`)
+                .then(res => res.json())
+                .then(comentarios => {
+                    const lista = document.getElementById('lista-comentarios');
+                    lista.innerHTML = '';
+
+                    if (comentarios.length === 0) {
+                        lista.innerHTML = '<p class="text-muted mb-0">Sé el primero en opinar sobre este producto.</p>';
+                        return;
+                    }
+
+                    comentarios.forEach(c => {
+                        lista.innerHTML += `
+                            <div class="card border-0 border-bottom mb-3 pt-2 pb-1 bg-transparent">
+                                <div class="d-flex justify-content-between">
+                                    <strong class="text-dark"><i class="bi bi-person-circle"></i> ${c.usuario}</strong>
+                                    <small class="text-muted">${new Date(c.fecha).toLocaleDateString()}</small>
+                                </div>
+                                <p class="mt-2 text-secondary">${c.texto}</p>
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        // Función para enviar un comentario nuevo
+        function enviarComentario() {
+            const texto = document.getElementById('texto-comentario').value;
+            if (texto.trim() === '') return alert('Escribe algo primero.');
+
+            const datos = {
+                texto: texto,
+                id_usuario: 2 // Cliente fijo por simplicidad académica
+            };
+
+            fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            })
+                .then(res => res.json())
+                .then(respuesta => {
+                    if (respuesta.success) {
+                        document.getElementById('texto-comentario').value = ''; // limpiar cajita
+                        cargarComentarios(); // recargar la lista
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApol - Catálogo Oficial</title>
+    <!-- Aquí importamos Bootstrap 5 para que todo se vea bonito sin escribir CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        /* Un poco de CSS personalizado para que no se vea tan genérico */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #000 !important;
+        }
+
+        /* Apple style */
+        .card:hover {
+            transform: scale(1.02);
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-apple"></i> MyApol
+            </a>
+            <div class="d-flex">
+                <a href="login.html" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-person-lock"></i> Acceso Admin
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container">
+        <!-- Título y Buscador -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-6">
+                <h2 class="fw-bold">Nuestros Dispositivos</h2>
+                <p class="text-muted">Encuentra el próximo dispositivo inteligente que quieres comprar.</p>
+            </div>
+            <div class="col-md-6">
+                <!-- Buscador de texto puro (funcionalidad extra del requerimiento) -->
+                <input type="text" id="buscador" class="form-control form-control-lg"
+                    placeholder="Buscar por nombre o marca...">
+            </div>
+        </div>
+
+        <!-- Botones de Filtro (Categorías) -->
+        <div class="row mb-4">
+            <div class="col-12" id="botones-filtros">
+                <button class="btn btn-dark me-2 mb-2 btn-filtro" data-categoria="Todas">Todos</button>
+                <button class="btn btn-outline-dark me-2 mb-2 btn-filtro"
+                    data-categoria="Smartphones">Smartphones</button>
+                <button class="btn btn-outline-dark me-2 mb-2 btn-filtro" data-categoria="Computers">Computers</button>
+                <button class="btn btn-outline-dark me-2 mb-2 btn-filtro" data-categoria="Tablets">Tablets</button>
+                <button class="btn btn-outline-dark me-2 mb-2 btn-filtro" data-categoria="Wearables">Wearables</button>
+            </div>
+        </div>
+
+        <!-- Aquí se inyectarán mágicamente los dispositivos desde la Base de Datos -->
+        <div class="row g-4" id="contenedor-dispositivos">
+
+            <!-- EL JAVASCRIPT REEMPLAZARÁ ESTE MENSAJE CON TARJETAS REALES -->
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-dark" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">Cargando catálogo desde el servidor...</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Importamos el script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Lógica en JavaScript para conectar con el Backend (Fetch API) -->
+    <script>
+        // VARIABLE GLOBAL para guardar los dispositivos
+        let todosLosDispositivos = [];
+
+        // 1. Cuando la página carga, pedimos los datos al Backend (Servidor Python en el puerto 5000)
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('http://localhost:5000/api/dispositivos')
+                .then(respuesta => respuesta.json())
+                .then(datos => {
+                    todosLosDispositivos = datos.dispositivos; // Guardamos en memoria
+                    pintarDispositivos(todosLosDispositivos);  // Dibujamos en pantalla
+                })
+                .catch(error => {
+                    console.error("Error conectando al backend:", error);
+                    document.getElementById('contenedor-dispositivos').innerHTML =
+                        '<div class="alert alert-danger">Error al cargar los datos. Verifica que el servidor Backend (app.py) esté corriendo.</div>';
+                });
+        });
+
+        // 2. Función que toma los datos y crea el HTML de las tarjetas (Cards)
+        function pintarDispositivos(lista) {
+            const contenedor = document.getElementById('contenedor-dispositivos');
+            contenedor.innerHTML = ''; // Limpiamos el texto de "Cargando..."
+
+            if (lista.length === 0) {
+                contenedor.innerHTML = '<div class="col-12"><p class="text-center text-muted">No se encontraron dispositivos.</p></div>';
+                return;
+            }
+
+            // Recorremos cada dispositivo recibido de la base de datos
+            lista.forEach(item => {
+                // Formateador de moneda para Pesos Colombianos
+                const precioFormateado = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(item.precio);
+
+                // Creamos el pedazo de HTML por cada producto usando variables (Template Strings)
+                const htmlCard = `
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-secondary mb-2">${item.categoria}</span>
+                                <h5 class="card-title fw-bold">${item.nombre}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">${item.marca}</h6>
+                                <p class="card-text small text-truncate">${item.descripcion}</p>
+                            </div>
+                            <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pb-3 px-3">
+                                <span class="fw-bold fs-5 text-dark">${precioFormateado}</span>
+                                <a href="detalle.html?id=${item.id}" class="btn btn-dark btn-sm">Ver Detalle</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contenedor.innerHTML += htmlCard;
+            });
+        }
+
+        // 3. Lógica para el Buscador de texto
+        document.getElementById('buscador').addEventListener('keyup', (e) => {
+            const texto = e.target.value.toLowerCase();
+            const filtrados = todosLosDispositivos.filter(item =>
+                item.nombre.toLowerCase().includes(texto) || item.marca.toLowerCase().includes(texto)
+            );
+            pintarDispositivos(filtrados);
+        });
+
+        // 4. Lógica para los Botones de Filtro por Categoría
+        const botonesFiltro = document.querySelectorAll('.btn-filtro');
+        botonesFiltro.forEach(boton => {
+            boton.addEventListener('click', (e) => {
+                // Pinta de negro el botón activo y pone blancos los demás
+                botonesFiltro.forEach(b => { b.classList.remove('btn-dark'); b.classList.add('btn-outline-dark'); });
+                e.target.classList.remove('btn-outline-dark'); e.target.classList.add('btn-dark');
+
+                const categoriaBuscada = e.target.getAttribute('data-categoria');
+
+                if (categoriaBuscada === 'Todas') {
+                    pintarDispositivos(todosLosDispositivos);
+                } else {
+                    const filtrados = todosLosDispositivos.filter(item => item.categoria === categoriaBuscada);
+                    pintarDispositivos(filtrados);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
