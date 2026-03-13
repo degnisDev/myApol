@@ -8,7 +8,7 @@ print(f"Conectando y creando la base de datos en: {db_path}")
 conexion = sqlite3.connect(db_path)
 cursor = conexion.cursor()
 
-# 1. Tabla ROLES
+# 1. Tabla ROLESfdgdf
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS roles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
