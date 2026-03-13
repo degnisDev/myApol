@@ -1,8 +1,11 @@
 /* CSS Personalizado - Estilo PREMIUM Apple/Tech */
 
 body {
-    /* Un gradiente oscuro y elegante muy sutil */
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1f24 100%);
+    /* Gradiente premium TECNOLÓGICO: Azul oscuro -> Negro Profundo -> Destello Blanco suave */
+    /* Hacemos los colores mucho más fuertes e intensos para que se visualicen mejor */
+    background: linear-gradient(135deg, #0d2b45 0%, #000000 45%, #000000 25%, #a0a0ac 100%);
+    background-color: #000; /* Color base si el gradiente falla */
+    background-attachment: fixed; /* El fondo se queda quieto al hacer scroll, dando efecto Parallax */
     color: #ffffff;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
@@ -163,4 +166,28 @@ body {
 /* Separador en comentarios */
 .comment-item {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* =========================================
+   FOOTER INVERSO (CLARO) - CRÉDITOS DE AUTOR
+   ========================================= */
+.footer-inverso {
+    /* Color inverso al Navbar oscuro: Un blanco crudo/gris perla muy elegante */
+    background-color: rgba(245, 245, 247, 0.95);
+    backdrop-filter: blur(10px); /* Efecto Glassmorphism */
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5); /* Sombra hacia arriba que corta con el fondo negro */
+    margin-top: auto; /* Empuja el footer siempre hacia abajo */
+}
+
+/* Enlace a Portafolio (Degnisdev) */
+.signature-link {
+    transition: all 0.3s ease;
+    text-shadow: 0px 0px 0px rgba(13, 110, 253, 0);
+}
+
+.signature-link:hover {
+    color: #0d6efd !important; /* Azul más vivo al pasar el mouse */
+    text-shadow: 0 0 12px rgba(13, 110, 253, 0.6); /* Destello de neón azul */
+    letter-spacing: 0.5px; /* Animación sutil de estiramiento */
 }
