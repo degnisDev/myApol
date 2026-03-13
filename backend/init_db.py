@@ -79,6 +79,7 @@ try:
     # ----------------------------------------------------
     cursor.execute("INSERT INTO roles (nombre) VALUES ('Administrador'), ('Cliente')")
     cursor.execute("INSERT INTO usuarios (nombre, correo, password, id_rol) VALUES ('Super Admin', 'admin@myapol.com', '12345', 1)")
+    cursor.execute("INSERT INTO usuarios (nombre, correo, password, id_rol) VALUES ('Cliente Prueba', 'cliente@myapol.com', '12345', 2)")
     
     # ----------------------------------------------------
     # MARCA
