@@ -1,0 +1,71 @@
+=========================================================
+      GUION DE SUSTENTACION: MYAPOL (APROX. 5 MINUTOS)
+=========================================================
+
+[PANTALLA: Inicias mostrando el diseño final de la página web (index.html) por un par de segundos para enganchar a la audiencia]
+
+"Hola, profesor y compañeros. Soy Degnis Geovany Quevedo Gutiérrez, de quinto semestre, y este es mi proyecto integrador: **MyApol**, un catálogo y tienda de dispositivos inteligentes. 
+
+Para poder construir esta plataforma bajo una arquitectura por capas, decidí no mezclar todo el código en un solo archivo. Adopté el modelo Cliente-Servidor separando totalmente el Front-end del Back-end. Les voy a explicar cronológicamente, paso a paso, cómo lo construí."
+
+---------------------------------------------------------
+
+[PANTALLA: Abres Visual Studio Code y muestras el archivo init_db.py]
+
+**Paso 1: Los Cimientos (La Base de Datos)**
+"Lo primero que hice fue asegurar los datos. Para no complicar la ejecución local elegí SQLite. Creé un script llamado `init_db.py` que diseñó la estructura de 5 tablas relacionales: productos, categorías, comentarios, usuarios y roles.
+Pero una base de datos vacía no sirve de nada; así que dentro de este mismo script, escribí por única vez (en duro) la lista de los 18 dispositivos de Apple. 
+Al ejecutar este archivo, esos productos se guardaron (se sembraron) en el archivo físico `database.db`. Ésta fue la base matemática de todo mi proyecto."
+
+---------------------------------------------------------
+
+[PANTALLA: Pasas al archivo app.py]
+
+**Paso 2: El Cerebro (El Servidor y la API REST)**
+"Con los datos listos, necesitaba una forma de que la página web los leyera. Así que construí mi propio Back-end utilizando Python y el micro-framework Flask. 
+En mi archivo `app.py`, creé lo que técnicamente se conoce como una API RESTful. Programé diferentes 'rutas' o 'endpoints', como por ejemplo `/api/dispositivos`.
+¿Qué hace esta ruta? Recibe una petición, entra a leer mi base de datos `database.db`, extrae la lista de teléfonos que habíamos sembrado y me la escupe hacia internet en formato JSON crudo, listo para ser consumido por cualquier cliente."
+
+---------------------------------------------------------
+
+[PANTALLA: Vuelves al navegador y cambias rápidamente entre tu página visual index.html y una pestaña donde se vea la ruta http://localhost:5000/api/dispositivos devolviendo el JSON blanco y negro]
+
+"Ven la diferencia: Esta es la API cruda, y esta es la presentación visual del cliente web consumiendo esa API."
+
+---------------------------------------------------------
+
+[PANTALLA: Regresas a VS Code y muestras rápidamente el HTML y el archivo styles.css]
+
+**Paso 3: El Lienzo (El Front-end Visual)**
+"Teniendo el servidor funcionando, pasé a construir el Front-end. Usé HTML5 y me apoyé en Bootstrap 5, lo que me permitió crear este diseño 100% responsivo usando su sistema de grillas sin escribir casi nada de CSS estructural. 
+Reservé mi archivo `styles.css` nativo exclusivamente para aplicar la estética premium oscura de Apple (efectos de cristal, degradados de color y luces)."
+
+---------------------------------------------------------
+
+[PANTALLA: Muestras scripts.js en VS Code y luego haces una demostración en vivo del buscador en la web]
+
+**Paso 4: La Conexión (El Controlador en JS)**
+"Pero, ¿cómo conecté el Lienzo de Bootstrap con el Cerebro en Python? Lo hice todo a través de JavaScript en mi archivo `scripts.js` usando la función asíncrona `fetch()`. JavaScript funciona como el controlador de mi arquitectura MVC. 
+Él viaja a mi API de Python, recoge el JSON con los teléfonos y 'pinta' (renderiza) el HTML directamente en la pantalla del usuario en tiempo real. 
+Gracias a esto construí este buscador interactivo [Escribes 'Macbook' en la barra de búsqueda en la web], el cual no recarga la página, porque intercepta lo que el usuario tipea y filtra instantáneamente los datos que tenemos en el navegador."
+
+---------------------------------------------------------
+
+[PANTALLA: Haces scroll mostrando las fotos hermosas, entras al detalle de un producto e intentas escribir un comentario bloqueado]
+
+**Paso 5: Calidad, Rendimiento y Seguridad**
+"Finalmente quise enfocarme en la calidad. 
+* Rendimiento: Pueden notar que las imágenes de los productos son de calidad Ultra HD. Si yo hubiera descargado esas 18 fotos en mi proyecto, pesaría muchísimo. En su lugar, mediante la base de datos, implementé 'Hotlinking' apuntando directamente a las URLs de los servidores globales o CDNs de Apple. Mi proyecto pesa ceros bytes en fotos, obteniendo carga optimizada.
+* Seguridad: Implementé un CRUD completo mediante un panel administrativo (que no mostraré por tiempo), pero sobre todo exigí Autenticación para Clientes. 
+[En el video vas a 'Iniciar Sesión / Registrarse', te logueas, el botón cambia a 'Hola Degnis', regresas al producto y el comentario rojo desaparece dando lugar a la caja de texto]
+Si no estás logueado, la plataforma y el servidor no te dejan comentar. Al iniciar sesión, la arquitectura valida contra la base de datos, devuelve un Token que el navegador almacena, y me permite publicar mi comentario enviando mi ID de usuario exacto a mi Base de Datos."
+
+---------------------------------------------------------
+
+[PANTALLA: Cierre formal mirando a la cámara o volviendo a la portada de la tienda]
+
+**Conclusión:**
+"En resumen, MyApol puso en práctica todo el ciclo de vida del software: un Modelo sólido en SQLite, una Vista moderna en Bootstrap, y un Controlador avanzado dominado por Python (Flask) y asincronismo en JavaScript (Fetch). 
+Cumpliendo así el 100% de la rúbrica con eficiencia de escala comercial.
+
+Soy Degnis Quevedo, y esta fue la arquitectura de mi proyecto. Muchas gracias."
