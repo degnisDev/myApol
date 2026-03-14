@@ -66,8 +66,11 @@ python backend/app.py
 ### Paso 5: Abrir el Frontend (La Página Web)
 No necesitas servidores web super extraños para la vista. Simplemente ve a la carpeta `frontend` en tu explorador de archivos convencional y haz doble clic sobre el archivo **`index.html`** para abrirlo en tu navegador favorito (Chrome, Safari, Edge).
 
-## USUARIO Y CONTRASEÑA Administrador
+## USUARIOS Y CONTRASEÑAS PRUEBA
 
 - Usuario: admin@myapol.com
+- Contraseña: 12345
+
+- Cliente: cliente@myapol.cpm
 - Contraseña: 12345
 
