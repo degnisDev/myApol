@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Buscador
         const buscador = document.getElementById('buscador');
         if (buscador) {
-            // Se usa el evento "input" que es más confiable que "keyup"
             buscador.addEventListener('input', (e) => {
                 const texto = e.target.value.toLowerCase().trim();
                 const filtrados = todosLosDispositivos.filter(item =>
@@ -44,12 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const botonesFiltro = document.querySelectorAll('.btn-filtro');
         botonesFiltro.forEach(boton => {
             boton.addEventListener('click', (e) => {
-                // Pinta de azul el botón activo y pone outline a los demás
                 botonesFiltro.forEach(b => { b.classList.remove('btn-accent'); b.classList.add('btn-outline-light'); });
                 e.target.classList.remove('btn-outline-light'); e.target.classList.add('btn-accent');
 
                 const categoriaBuscada = e.target.getAttribute('data-categoria');
-
                 if (categoriaBuscada === 'Todas') {
                     pintarDispositivos(todosLosDispositivos);
                 } else {
@@ -81,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const imgSrc = datos.url_imagen ? datos.url_imagen : imgPlaceholder;
 
+                // Guardamos el producto en memoria para el botón de carrito
+                window._currentProduct = datos;
+
                 zonaDetalle.innerHTML = `
                     <div class="col-md-5 text-center">
                         <div class="p-4" style="background: linear-gradient(0deg, rgba(25,28,33,1) 0%, rgba(40,44,52,1) 100%); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
@@ -93,11 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h1 class="fw-bold display-4 mb-3 text-gradient">${datos.nombre}</h1>
                         <p class="fs-5 text-light opacity-75 mb-4 lh-lg">${datos.descripcion}</p>
                         <h2 class="fw-bold text-white mb-4 display-6">${formatearCOP(datos.precio)}</h2>
-                        <button class="btn btn-cta btn-lg px-5 shadow"><i class="bi bi-cart me-2"></i> Añadir al Carrito</button>
+                        <button class="btn btn-cta btn-lg px-5 shadow" onclick="cart.add(window._currentProduct)">
+                            <i class="bi bi-cart me-2"></i> Añadir al Carrito
+                        </button>
                     </div>
                 `;
 
-                // Petición 2: Después de cargar el equipo, cargamos sus comentarios
                 cargarComentarios();
             })
             .catch(e => console.error(e));
@@ -132,7 +133,12 @@ function pintarDispositivos(lista) {
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center pb-3 px-3">
                         <span class="fw-bold fs-5 text-white">${precioFormateado}</span>
-                        <a href="detalle.html?id=${item.id}" class="btn btn-outline-light btn-sm rounded-pill px-3">Ver Detalle</a>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm rounded-circle shadow-sm" onclick="agregarAlCarritoDesdeCatalogo(${item.id})" title="Añadir al carrito">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
+                            <a href="detalle.html?id=${item.id}" class="btn btn-outline-light btn-sm rounded-pill px-3">Detalle</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,15 +147,12 @@ function pintarDispositivos(lista) {
     });
 }
 
-// FUNCIÓN: Pintar comentarios en detalle.html
-// Lógica de Autenticación para Comentarios
+// FUNCIÓN: Lógica de Autenticación para Comentarios en detalle.html
 document.addEventListener('DOMContentLoaded', () => {
-    // Si estamos en la página de detalle
     const idUrl = new URLSearchParams(window.location.search).get('id');
     if (idUrl) {
         idDispositivo = idUrl;
 
-        // Manejo del Navbar en detalle.html
         const zonaUsuarioDetalle = document.getElementById('zona-usuario-detalle');
         const token = localStorage.getItem('cliente_token');
         const nombre = localStorage.getItem('cliente_nombre');
@@ -160,27 +163,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="cerrarSesionCliente()">Salir</button>
             `;
 
-            // Reemplazar la caja en rojo por la de texto
             const cajaFormulario = document.getElementById('caja-hacer-comentario');
             if (cajaFormulario) {
                 cajaFormulario.innerHTML = `
-                <div class="card card-dark mb-4 shadow-sm border-secondary">
-                    <div class="card-body">
-                        <textarea id="texto-comentario" class="form-control form-control-dark mb-3" rows="3"
-                            placeholder="¿Qué opinas de este dispositivo? Escribe como ${nombre}..."></textarea>
-                        <button id="btn-comentar" class="btn btn-accent btn-sm" onclick="enviarComentario()">
-                            <i class="bi bi-send me-1"></i> Publicar Opinión
-                        </button>
+                    <div class="card card-dark mb-4 shadow-sm border-secondary">
+                        <div class="card-body">
+                            <textarea id="texto-comentario" class="form-control form-control-dark mb-3" rows="3"
+                                placeholder="¿Qué opinas de este dispositivo? Escribe como ${nombre}..."></textarea>
+                            <button id="btn-comentar" class="btn btn-accent btn-sm" onclick="enviarComentario()">
+                                <i class="bi bi-send me-1"></i> Publicar Opinión
+                            </button>
+                        </div>
                     </div>
-                </div>
                 `;
             }
         }
 
-        cargarDetalle();
         cargarComentarios();
     }
 });
+
+// FUNCIÓN: Cargar comentarios
 function cargarComentarios() {
     fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`)
         .then(res => res.json())
@@ -212,14 +215,12 @@ function cargarComentarios() {
         });
 }
 
-// FUNCIÓN: Enviar un comentario en detalle.html
+// FUNCIÓN: Enviar un comentario
 function enviarComentario() {
     const texto = document.getElementById('texto-comentario').value;
     if (texto.trim() === '') return alert('Escribe algo primero.');
 
-    // Tomamos el ID Real del Navegador que se generó en su Login
     const idReal = localStorage.getItem('cliente_id');
-
     if (!idReal) {
         return alert("Error fatal: No se detectó tu sesión de usuario.");
     }
@@ -231,17 +232,14 @@ function enviarComentario() {
 
     fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(datos)
     })
         .then(res => res.json())
         .then(respuesta => {
             if (respuesta.success) {
-                document.getElementById('texto-comentario').value = ''; // limpiar cajita
-                cargarComentarios(); // recargar la lista
+                document.getElementById('texto-comentario').value = '';
+                cargarComentarios();
             } else {
                 alert("Hubo un error al guardar el comentario: " + (respuesta.mensaje || "Desconocido"));
             }
@@ -250,4 +248,12 @@ function enviarComentario() {
             console.error("Fetch POST Error:", err);
             alert("No se pudo conectar al servidor para guardar tu opinión.");
         });
+}
+
+// FUNCIÓN: Cerrar sesión cliente
+function cerrarSesionCliente() {
+    localStorage.removeItem('cliente_token');
+    localStorage.removeItem('cliente_id');
+    localStorage.removeItem('cliente_nombre');
+    window.location.reload();
 }
