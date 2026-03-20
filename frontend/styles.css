@@ -98,8 +98,20 @@ body {
 .cart-item-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 2px; }
 .cart-item-price { font-size: 0.85rem; color: #007aff; }
 
-.hover-scale { transition: transform 0.2s; }
-.hover-scale:hover { transform: scale(1.1); }
+.hover-scale { 
+    transition: all 0.25s ease; 
+}
+
+.hover-scale:hover,
+.hover-scale:focus {
+    transform: scale(1.15) !important;
+    background-color: #007aff !important;
+    border-color: #007aff !important;
+    box-shadow: 0 0 15px rgba(0, 122, 255, 0.6) !important;
+    color: #ffffff !important;
+}
+
+
 
 /* Tarjetas de productos y comentarios */
 .card {

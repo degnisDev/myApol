@@ -6,6 +6,14 @@ const cart = {
 
     // 1. Añadir producto
     add(product) {
+        // SEGURIDAD: Solo usuarios logueados pueden agregar al carrito
+        const token = localStorage.getItem('cliente_token');
+        if (!token) {
+            alert("⚠️ Debes iniciar sesión para agregar productos al carrito.");
+            window.location.href = 'login_cliente.html';
+            return;
+        }
+
         const existing = this.items.find(i => i.id === product.id);
         if (existing) {
             existing.quantity++;
@@ -14,10 +22,10 @@ const cart = {
         }
         this.save();
         this.updateUI();
-        // Abrir el carrito automáticamente para mostrar que se añadió
         const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasCart'));
         offcanvas.show();
     },
+
 
     // 2. Eliminar producto
     remove(id) {

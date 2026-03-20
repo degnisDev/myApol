@@ -255,5 +255,8 @@ function cerrarSesionCliente() {
     localStorage.removeItem('cliente_token');
     localStorage.removeItem('cliente_id');
     localStorage.removeItem('cliente_nombre');
+    // Limpiar el carrito al salir de sesión
+    localStorage.removeItem('myapol_cart');
     window.location.reload();
 }
+
