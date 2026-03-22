@@ -51,21 +51,28 @@ def get_dispositivos():
 @app.route('/api/dispositivos/<int:id>', methods=['GET'])
 def get_dispositivo(id):
     conn = get_db_connection()
-    query = '''
-        SELECT d.id, d.nombre, d.descripcion, d.precio, d.url_imagen, 
-               m.nombre as marca, c.nombre as categoria
-        FROM dispositivos d
-        JOIN marcas m ON d.id_marca = m.id
-        JOIN categorias c ON d.id_categoria = c.id
-        WHERE d.id = ?
-    '''
-    dispositivo = conn.execute(query, (id,)).fetchone()
-    conn.close()
+    equipo = conn.execute('''
+            SELECT d.*, m.nombre as marca, c.nombre as categoria
+            FROM dispositivos d
+            JOIN marcas m ON d.id_marca = m.id
+            JOIN categorias c ON d.id_categoria = c.id
+            WHERE d.id = ?
+        ''', (id,)).fetchone()
+
+    if equipo is None:
+        conn.close()
+        return jsonify({'success': False, 'mensaje': 'No encontrado'}), 404
     
-    if dispositivo:
-        return jsonify(dict(dispositivo))
-    else:
-        return jsonify({"success": False, "mensaje": "Dispositivo no encontrado"}), 404
+    # Obtener fotos adicionales de la galería
+    rows = conn.execute('SELECT url_imagen FROM imagenes_dispositivo WHERE id_dispositivo = ?', (id,)).fetchall()
+    galeria = [r['url_imagen'] for r in rows]
+    
+    data = dict(equipo)
+    data['galeria'] = galeria  # Lista de fotos extra, o [] si no tiene
+    
+    conn.close()
+    return jsonify(data)
+
 
 # -------------------------------------------------------------
 # RUTA PÚBLICA: Obtener y Crear Comentarios de un dispositivo

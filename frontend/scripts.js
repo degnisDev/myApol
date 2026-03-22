@@ -81,11 +81,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Guardamos el producto en memoria para el botón de carrito
                 window._currentProduct = datos;
 
+                // Construir miniaturas de galería si existen
+                let galeriaHTML = '';
+                if (datos.galeria && datos.galeria.length > 0) {
+                    const todasLasFotos = [datos.url_imagen, ...datos.galeria];
+                    galeriaHTML = `
+                        <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+                            ${todasLasFotos.map((foto, i) => `
+                                <img src="${foto}" alt="Vista ${i + 1}"
+                                     onclick="cambiarFotoPrincipal('${foto}')"
+                                     class="thumbnail-galeria ${i === 0 ? 'thumbnail-activa' : ''}"
+                                     style="width:70px; height:70px; object-fit:contain; cursor:pointer; border-radius:10px; padding:4px; background:rgba(255,255,255,0.05);">
+                            `).join('')}
+                        </div>`;
+                }
+
                 zonaDetalle.innerHTML = `
                     <div class="col-md-5 text-center">
                         <div class="p-4" style="background: linear-gradient(0deg, rgba(25,28,33,1) 0%, rgba(40,44,52,1) 100%); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-                            <img src="${imgSrc}" class="img-fluid object-fit-contain" style="max-height: 400px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5));" alt="${datos.nombre}">
+                            <img id="foto-principal" src="${imgSrc}" class="img-fluid object-fit-contain" style="max-height: 380px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.5)); transition: opacity 0.3s ease;" alt="${datos.nombre}">
                         </div>
+                        ${galeriaHTML}
                     </div>
                     <div class="col-md-7 mt-5 mt-md-0 ps-md-5">
                         <span class="badge bg-primary mb-2 px-3 py-2 rounded-pill">${datos.marca}</span>
@@ -98,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </button>
                     </div>
                 `;
+
 
                 cargarComentarios();
             })
@@ -259,4 +276,15 @@ function cerrarSesionCliente() {
     localStorage.removeItem('myapol_cart');
     window.location.reload();
 }
+
+function cambiarFotoPrincipal(src) {
+    const foto = document.getElementById('foto-principal');
+    if (foto) {
+        foto.style.opacity = '0';
+        setTimeout(() => { foto.src = src; foto.style.opacity = '1'; }, 200);
+    }
+    document.querySelectorAll('.thumbnail-galeria').forEach(t => t.classList.remove('thumbnail-activa'));
+    event.target.classList.add('thumbnail-activa');
+}
+
 

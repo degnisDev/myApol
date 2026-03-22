@@ -313,3 +313,17 @@ body {
 .whatsapp-float {
     animation: pulse-whatsapp 2s infinite;
 }
+
+/* Galería de miniaturas en detalle */
+.thumbnail-galeria {
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+}
+.thumbnail-galeria:hover,
+.thumbnail-activa {
+    border-color: #007aff !important;
+    opacity: 1 !important;
+    transform: scale(1.08);
+}
+
