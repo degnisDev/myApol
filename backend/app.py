@@ -1,8 +1,12 @@
+import mercadopago
 from flask import Flask, jsonify, request
 import sqlite3
 import os
 
 app = Flask(__name__)
+
+# Inicializar mercado pago con Access Token
+# sdk = mercadopago.SDK("TOKEN_ACCES")
 
 # Función ayudante para conectarse a la DB
 def get_db_connection():
@@ -254,6 +258,49 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
+
+# -------------------------------------------------------------
+# RUTA MERCADO PAGO: Crear preferencia de pago
+# -------------------------------------------------------------
+@app.route('/api/create_preference', methods=['POST'])
+def create_preference():
+    try:
+        # Recibimos los items del carrito desde el frontend
+        items_carrito = request.json.get('items')
+        
+        # Construimos la lista de items para Mercado Pago
+        items_mp = []
+        for item in items_carrito:
+            items_mp.append({
+                "id": str(item['id']),
+                "title": item['nombre'],
+                "quantity": int(item['quantity']),
+                "unit_price": float(item['precio']),
+                "currency_id": "COP"
+            })
+
+        # Configuramos la preferencia
+        preference_data = {
+            "items": items_mp,
+            "back_urls": {
+                "success": "http://localhost:5500/frontend/index.html", # Cambia si usas otro puerto
+                "failure": "http://localhost:5500/frontend/index.html",
+                "pending": "http://localhost:5500/frontend/index.html"
+            },
+            "auto_return": "approved",
+        }
+
+        # Creamos la preferencia en MP
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response["response"]
+
+        # Retornamos el ID de la preferencia al frontend
+        return jsonify({"id": preference["id"]})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == '__main__':
     # Ejecuta el servidor en el puerto 5000 con modo debug activado

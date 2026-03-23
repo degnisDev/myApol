@@ -1,0 +1,18 @@
+[33m7ea1f5e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Depuramos el codigo eliminando ficheros que ya cumplieron su ciclo
+[33m5791f69[m Actualizamos todo el catalogo de productos, agregando fotos, descripcion y precios reales
+[33mddf4551[m  Carrito de compras funcionando en todas las paginas.
+[33m23ffce7[m  Se ajusta la parte del offcanvas del carrito de compras...
+[33m781e293[m Agregamos el boton del carrito asi como la logica detras de este, proximo... pasarela de pagos
+[33ma6b12b3[m Actualizamos el Footer, redes sociales y agregamos boton flotante de WhatsApp
+[33m11c020c[m Actualizamos el logo para diferenciarnos de Apple y se cambia en todas las paginas
+[33m8267c46[m Empezamos con la fase final del proyecto, nuevos requerimientos funcionales y no funcionales
+[33md2bcadd[m[33m ([m[1;31morigin/main[m[33m)[m Se agregaron nuevas features, como un cliente de prueba y algunas imagenes de como luce la pagina actualmente
+[33m06ef2ac[m Todos los cambios realizados exitosamente, proyecto listo para subir
+[33m3d4cd6f[m Se pulieron los comentarios y el proyecto esta casi finalizado y listo para subir
+[33m59d0c06[m Se hicieron todos los cambios, falta pulir comentarios
+[33m6cf18f2[m Proyecto finalizado v1
+[33macec727[m Ajustamos los comentarios del proyecto
+[33m6c67425[m Agregamos un gradiente al fondo y creamos el Footer con nuestra firma
+[33mc448a98[m se crea la logica para el login del cliente o usuario, se hacen las validaciones
+[33m4951107[m  Separamos el CSS - JS -HTML en ficheros diferentes para mas organizacion
+[33m740b603[m Proyecto myapol - DataBase - index.html - backend

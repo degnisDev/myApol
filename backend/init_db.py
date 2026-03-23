@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS roles (
 )
 ''')
 
-# 2. Tabla USUARIOS
+# 2. Tabla USUARIOS...
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

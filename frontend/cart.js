@@ -88,7 +88,42 @@ const cart = {
             }).join('');
             totalPriceEl.innerText = formatearCOP(total);
         }
+    },
+
+    async checkout() {
+        const btnCheckout = document.getElementById('btn-checkout');
+        btnCheckout.innerText = "Procesando...";
+        btnCheckout.classList.add('disabled');
+
+        try {
+            // 1. Enviamos el carrito al backend para crear la preferencia
+            const response = await fetch('http://localhost:5000/api/create_preference', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: this.items })
+            });
+            const data = await response.json();
+
+            if (data.id) {
+                // 2. Inicializamos Mercado Pago con tu PUBLIC_KEY
+                const mp = new MercadoPago('TU_PUBLIC_KEY', { locale: 'es-CO' });
+
+                // 3. Abrimos el Checkout Pro
+                mp.checkout({
+                    preference: { id: data.id },
+                    autoOpen: true
+                });
+            }
+        } catch (error) {
+            console.error("Error en el pago:", error);
+            alert("Hubo un error al iniciar el pago.");
+        } finally {
+            btnCheckout.innerText = "Finalizar Compra";
+            btnCheckout.classList.remove('disabled');
+        }
     }
+
+
 };
 
 // Función puente para el catálogo

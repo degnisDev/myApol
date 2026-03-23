@@ -191,7 +191,7 @@
                 <span class="fs-5">Total Est:</span>
                 <span class="fs-5 fw-bold text-success" id="cart-total-price">$0</span>
             </div>
-            <button class="btn btn-cta w-100 py-3 fw-bold mb-2 disabled" id="btn-checkout">
+            <button class="btn btn-cta w-100 py-3 fw-bold mb-2" id="btn-checkout" onclick="cart.checkout()">
                 PROCEDER AL PAGO <i class="bi bi-credit-card ms-2"></i>
             </button>
             <button class="btn btn-outline-secondary btn-sm w-100 border-0" onclick="cart.clear()">
@@ -204,6 +204,7 @@
         class="whatsapp-float" target="_blank">
         <i class="bi bi-whatsapp"></i>
     </a>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </body>
 
 </html>
