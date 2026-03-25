@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Inicializar mercado pago con Access Token
-# sdk = mercadopago.SDK("TOKEN_ACCES")
+sdk = mercadopago.SDK("APP_USR-7274769787548043-032511-b3a9e049624e523fca7625cf52ee3161-3292872524")
 
 # Función ayudante para conectarse a la DB
 def get_db_connection():
@@ -265,10 +265,8 @@ def after_request(response):
 @app.route('/api/create_preference', methods=['POST'])
 def create_preference():
     try:
-        # Recibimos los items del carrito desde el frontend
         items_carrito = request.json.get('items')
         
-        # Construimos la lista de items para Mercado Pago
         items_mp = []
         for item in items_carrito:
             items_mp.append({
@@ -279,26 +277,33 @@ def create_preference():
                 "currency_id": "COP"
             })
 
-        # Configuramos la preferencia
         preference_data = {
             "items": items_mp,
             "back_urls": {
-                "success": "http://localhost:5500/frontend/index.html", # Cambia si usas otro puerto
+                "success": "http://localhost:5500/frontend/index.html",
                 "failure": "http://localhost:5500/frontend/index.html",
                 "pending": "http://localhost:5500/frontend/index.html"
             },
-            "auto_return": "approved",
+            # "auto_return": "approved",
         }
 
-        # Creamos la preferencia en MP
+        # Intentamos crear la preferencia
         preference_response = sdk.preference().create(preference_data)
-        preference = preference_response["response"]
+        
+        # --- NUEVA LÓGICA DE DIAGNÓSTICO ---
+        status_sdk = preference_response["status"]
+        response_sdk = preference_response["response"]
 
-        # Retornamos el ID de la preferencia al frontend
-        return jsonify({"id": preference["id"]})
+        if status_sdk >= 400:
+            print("ERROR DE MERCADO PAGO:", response_sdk) # Esto saldrá en tu terminal negra
+            return jsonify({"error": "Error de Mercado Pago", "detalles": response_sdk}), status_sdk
+
+        # Si todo salió bien, devolvemos el ID
+        return jsonify({"id": response_sdk["id"]})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("EXCEPCIÓN EN EL SERVIDOR:", str(e))
+        return jsonify({"error": "Excepción interna", "mensaje": str(e)}), 500
 
 
 

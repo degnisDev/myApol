@@ -91,12 +91,13 @@ const cart = {
     },
 
     async checkout() {
+        if (this.items.length === 0) return;
+
         const btnCheckout = document.getElementById('btn-checkout');
         btnCheckout.innerText = "Procesando...";
         btnCheckout.classList.add('disabled');
 
         try {
-            // 1. Enviamos el carrito al backend para crear la preferencia
             const response = await fetch('http://localhost:5000/api/create_preference', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -104,24 +105,27 @@ const cart = {
             });
             const data = await response.json();
 
-            if (data.id) {
-                // 2. Inicializamos Mercado Pago con tu PUBLIC_KEY
-                const mp = new MercadoPago('TU_PUBLIC_KEY', { locale: 'es-CO' });
+            console.log("Respuesta del servidor:", data); // <-- Esto es clave
 
-                // 3. Abrimos el Checkout Pro
+            if (data.id) {
+                const mp = new MercadoPago('APP_USR-a4075105-fa5c-4994-9cd3-3f9e32e3b15a', { locale: 'es-CO' });
                 mp.checkout({
                     preference: { id: data.id },
                     autoOpen: true
                 });
+            } else {
+                alert("Error: El servidor no devolvió un ID de pago. Revisa la consola.");
+                console.error("Detalles del error:", data);
             }
         } catch (error) {
-            console.error("Error en el pago:", error);
-            alert("Hubo un error al iniciar el pago.");
+            console.error("Error en la petición:", error);
+            alert("No se pudo conectar con el servidor.");
         } finally {
-            btnCheckout.innerText = "Finalizar Compra";
+            btnCheckout.innerText = "PROCEDER AL PAGO";
             btnCheckout.classList.remove('disabled');
         }
     }
+
 
 
 };
