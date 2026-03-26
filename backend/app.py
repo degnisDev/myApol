@@ -284,13 +284,17 @@ def create_preference():
             #     "failure": "http://localhost:5500/frontend/index.html",
             #     "pending": "http://localhost:5500/frontend/index.html"
             # },
+            # "back_urls": {
+            #     "success": "https://degnisdev.com/myapol/index.html",
+            #     "failure": "https://degnisdev.com/myapol/index.html",
+            #     "pending": "https://degnisdev.com/myapol/index.html"
+            # },
             "back_urls": {
-                "success": "https://degnisdev.com/myapol/index.html",
-                "failure": "https://degnisdev.com/myapol/index.html",
-                "pending": "https://degnisdev.com/myapol/index.html"
+                "success": "https://degnisdev.github.io/myApol/frontend/index.html",
+                "failure": "https://degnisdev.github.io/myApol/frontend/index.html",
+                "pending": "https://degnisdev.github.io/myApol/frontend/index.html"
             },
-
-
+            
             # "auto_return": "approved",
         }
 
