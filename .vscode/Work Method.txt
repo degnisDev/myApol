@@ -1,7 +1,0 @@
-Work Method
-
-Quiero que me guies y yo lo hago, que actues como el lider del proyecto, y yo el programador, no quiero perder el control del proyecto,quiero entender todo,  de modo que
-no vas a ejecutar absolutamente nada ni en consola ni en codigo, me daras instrucciones claras y explicando lo que haremos, tipo:
-"Habra la teminal y lanza esta", "Crea un nuevo fichero con nombre x e ingresa este codigo."
-
-
