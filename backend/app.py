@@ -279,11 +279,18 @@ def create_preference():
 
         preference_data = {
             "items": items_mp,
+            # "back_urls": {
+            #     "success": "http://localhost:5500/frontend/index.html",
+            #     "failure": "http://localhost:5500/frontend/index.html",
+            #     "pending": "http://localhost:5500/frontend/index.html"
+            # },
             "back_urls": {
-                "success": "http://localhost:5500/frontend/index.html",
-                "failure": "http://localhost:5500/frontend/index.html",
-                "pending": "http://localhost:5500/frontend/index.html"
+                "success": "https://degnisdev.com/myapol/index.html",
+                "failure": "https://degnisdev.com/myapol/index.html",
+                "pending": "https://degnisdev.com/myapol/index.html"
             },
+
+
             # "auto_return": "approved",
         }
 

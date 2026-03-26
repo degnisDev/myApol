@@ -98,7 +98,8 @@ const cart = {
         btnCheckout.classList.add('disabled');
 
         try {
-            const response = await fetch('http://localhost:5000/api/create_preference', {
+            // const response = await fetch('http://localhost:5000/api/create_preference', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/create_preference`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ items: this.items })

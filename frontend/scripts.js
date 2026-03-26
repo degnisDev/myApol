@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA PARA INDEX.HTML (Catálogo) ---
     const contenedorDispositivos = document.getElementById('contenedor-dispositivos');
     if (contenedorDispositivos) {
-        fetch('http://localhost:5000/api/dispositivos')
+        // fetch('http://localhost:5000/api/dispositivos')
+        fetch(`${CONFIG.API_BASE_URL}/dispositivos`)
             .then(respuesta => respuesta.json())
             .then(datos => {
                 todosLosDispositivos = datos.dispositivos;
@@ -68,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`http://localhost:5000/api/dispositivos/${idDispositivo}`)
+        // fetch(`http://localhost:5000/api/dispositivos/${idDispositivo}`)
+        fetch(`${CONFIG.API_BASE_URL}/dispositivos/${idDispositivo}`)
             .then(res => res.json())
             .then(datos => {
                 if (datos.success === false) {
@@ -202,7 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // FUNCIÓN: Cargar comentarios
 function cargarComentarios() {
-    fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`)
+    // fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`)
+    fetch(`${CONFIG.API_BASE_URL}/comentarios/${idDispositivo}`)
         .then(res => res.json())
         .then(comentarios => {
             const lista = document.getElementById('lista-comentarios');
@@ -247,7 +250,8 @@ function enviarComentario() {
         id_usuario: parseInt(idReal)
     };
 
-    fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`, {
+    // fetch(`http://localhost:5000/api/comentarios/${idDispositivo}`, {
+    fetch(`${CONFIG.API_BASE_URL}/comentarios/${idDispositivo}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(datos)
