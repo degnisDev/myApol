@@ -173,12 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
         idDispositivo = idUrl;
 
         const zonaUsuarioDetalle = document.getElementById('zona-usuario-detalle');
+        const btnCarritoDetalle = document.getElementById('boton-carrito'); // <-- Nueva línea
         const token = localStorage.getItem('cliente_token');
         const nombre = localStorage.getItem('cliente_nombre');
-
         if (token && nombre && zonaUsuarioDetalle) {
+            // MOSTRAMOS EL CARRITO SI HAY SESIÓN
+            if (btnCarritoDetalle) btnCarritoDetalle.classList.remove('d-none'); // <-- Nueva línea
             zonaUsuarioDetalle.innerHTML = `
-                <span class="text-white-50 small me-2">Hola, <strong class="text-white">${nombre}</strong></span>
+                <span class="text-white-50 small me-2 d-none d-sm-inline">Hola, <strong class="text-white">${nombre}</strong></span>
                 <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="cerrarSesionCliente()">Salir</button>
             `;
 
