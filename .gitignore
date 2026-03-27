@@ -1,0 +1,4 @@
+api_entregable_3/
+__pycache__/
+*.pyc
+.env
